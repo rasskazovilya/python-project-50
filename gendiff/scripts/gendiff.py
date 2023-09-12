@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import argparse
+import json
+from pathlib import Path
 
 
 def main():
@@ -13,7 +15,14 @@ def main():
     parser.add_argument('-f', '--format', help='set format of output')
 
     args = parser.parse_args()
-    print('Hello World!')
+
+    first_file_path = Path.cwd() / 'gendiff' /'scripts' / args.first_file
+    second_file_path = Path.cwd() / 'gendiff' /'scripts' / args.second_file
+    first_file = json.load(open(first_file_path))
+    second_file = json.load(open(second_file_path))
+
+    print(first_file)
+    print(second_file)
 
 
 if __name__ == '__main__':
