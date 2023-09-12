@@ -11,12 +11,23 @@ def generate_diff(path1, path2):
     deleted_keys = set(first_file.keys()) - set(second_file.keys())
     added_keys = set(second_file.keys()) - set(first_file.keys())
     common_keys = set(first_file.keys()).intersection(set(second_file.keys()))
+    changed_keys = {key for key in common_keys if first_file[key] != second_file[key]}
+    unchanged_keys = {key for key in common_keys if first_file[key] == second_file[key]}
 
-    print(first_file)
-    print(second_file)
-    print(f'Del keys: {deleted_keys}')
-    print(f'Add keys: {added_keys}')
-    print(f'Common keys: {common_keys}')
+    diff = '{\n'
+    for key in sorted(set(first_file.keys()) | set(second_file.keys())):
+        if key in deleted_keys:
+            diff += f'  - {key}: {first_file[key]}\n'
+        if key in added_keys:
+            diff += f'  + {key}: {second_file[key]}\n'
+        if key in unchanged_keys:
+            diff += f'    {key}: {first_file[key]}\n'
+        if key in changed_keys:
+            diff += f'  - {key}: {first_file[key]}\n'
+            diff += f'  + {key}: {second_file[key]}\n'
+    diff += '}'
+
+    return diff
 
 
 def main():
@@ -34,7 +45,8 @@ def main():
     first_file_path = Path.cwd() / 'gendiff' / 'scripts' / args.first_file
     second_file_path = Path.cwd() / 'gendiff' / 'scripts' / args.second_file
 
-    generate_diff(first_file_path, second_file_path)
+    diff = generate_diff(first_file_path, second_file_path)
+    print(diff)
 
 
 if __name__ == '__main__':
