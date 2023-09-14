@@ -11,8 +11,12 @@ def generate_diff(path1, path2):
     deleted_keys = set(first_file.keys()) - set(second_file.keys())
     added_keys = set(second_file.keys()) - set(first_file.keys())
     common_keys = set(first_file.keys()).intersection(set(second_file.keys()))
-    changed_keys = {key for key in common_keys if first_file[key] != second_file[key]}
-    unchanged_keys = {key for key in common_keys if first_file[key] == second_file[key]}
+    changed_keys = {
+        key for key in common_keys if first_file[key] != second_file[key]
+        }
+    unchanged_keys = {
+        key for key in common_keys if first_file[key] == second_file[key]
+        }
 
     diff = '{\n'
     for key in sorted(set(first_file.keys()) | set(second_file.keys())):
