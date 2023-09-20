@@ -7,9 +7,18 @@ def get_fixture_path(filename):
     return fixtures_folder / filename
 
 
-def test_generate_diff():
+def test_generate_diff_json():
     diff = generate_diff(
         get_fixture_path('file1.json'), get_fixture_path('file2.json')
+    )
+    with open(get_fixture_path('result.txt')) as result_file:
+        result = result_file.read()
+    assert result == diff
+
+
+def test_generate_diff_yml():
+    diff = generate_diff(
+        get_fixture_path('file1.yml'), get_fixture_path('file2.yml')
     )
     with open(get_fixture_path('result.txt')) as result_file:
         result = result_file.read()
