@@ -1,24 +1,11 @@
 #!/usr/bin/env python3
 import argparse
-import json
-import yaml
-from pathlib import Path
+from gendiff.utils import parsing
 
-
-def get_file_contents(path):
-    loaders = {
-        '.json': json.load,
-        '.yml': yaml.safe_load,
-        '.yaml': yaml.safe_load
-    }
-    with open(path) as file:
-        file_suffix = Path(path).suffix
-        return loaders[file_suffix](file)
-        
 
 def generate_diff(path1, path2):
-    first_file = get_file_contents(path1)
-    second_file = get_file_contents(path2)
+    first_file = parsing.get_file_contents(path1)
+    second_file = parsing.get_file_contents(path2)
 
     deleted_keys = set(first_file.keys()) - set(second_file.keys())
     added_keys = set(second_file.keys()) - set(first_file.keys())
@@ -58,10 +45,7 @@ def main():
 
     args = parser.parse_args()
 
-    first_file_path = Path.cwd() / 'gendiff' / 'scripts' / args.first_file
-    second_file_path = Path.cwd() / 'gendiff' / 'scripts' / args.second_file
-
-    diff = generate_diff(first_file_path, second_file_path)
+    diff = generate_diff(args.first_file, args.second_file)
     print(diff)
 
 
