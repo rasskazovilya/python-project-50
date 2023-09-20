@@ -1,12 +1,24 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import yaml
 from pathlib import Path
 
 
+def get_file_contents(path):
+    loaders = {
+        '.json': json.load,
+        '.yml': yaml.safe_load,
+        '.yaml': yaml.safe_load
+    }
+    with open(path) as file:
+        file_suffix = Path(path).suffix
+        return loaders[file_suffix](file)
+        
+
 def generate_diff(path1, path2):
-    first_file = json.load(open(path1))
-    second_file = json.load(open(path2))
+    first_file = get_file_contents(path1)
+    second_file = get_file_contents(path2)
 
     deleted_keys = set(first_file.keys()) - set(second_file.keys())
     added_keys = set(second_file.keys()) - set(first_file.keys())
