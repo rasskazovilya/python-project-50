@@ -1,6 +1,5 @@
 from gendiff.scripts.gendiff import generate_diff
 from pathlib import Path
-import pytest
 
 
 def get_fixture_path(filename):
@@ -28,7 +27,7 @@ def test_generate_diff_yml():
 
 def test_generate_diff_nested_json():
     diff = generate_diff(
-        get_fixture_path('nested_file1.json'), 
+        get_fixture_path('nested_file1.json'),
         get_fixture_path('nested_file2.json')
     )
 
