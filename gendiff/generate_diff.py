@@ -1,4 +1,5 @@
 from gendiff.utils import parsing
+from gendiff.formats.choose_format import format_diff
 
 
 def generate_diff(path1, path2):
@@ -6,8 +7,8 @@ def generate_diff(path1, path2):
     file2 = parsing.get_file_contents(path2)
 
     diff = get_diff(file1, file2)
-
-    return diff
+    
+    return format_diff(diff, 'stylish')
 
 
 def make_new_diff_entry(key, new_value, old_value):
