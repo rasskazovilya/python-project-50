@@ -10,38 +10,35 @@ def generate_diff(path1, path2):
     return diff
 
 
-def make_new_diff_entry(key, new_value, old_value=None, state='unchanged'):
-    return {
+def make_new_diff_entry(key, new_value, old_value):
+    entry = {
         'key': key,
         'new_value': new_value,
         'old_value': old_value,
-        'state': state,
-        'children': get_diff(old_value, new_value)
     }
+
+    if not old_value:
+        state = 'added'
+    elif not new_value:
+        state = 'deleted'
+    elif new_value != old_value:
+        state = 'changed'
+    elif isinstance(new_value, dict) and isinstance(old_value, dict):
+        state = 'nested'
+        entry.update({'children': get_diff(old_value, new_value)})
+    else:
+        state = 'unchanged'
+    entry.update({'state': state})
+
+    return entry
 
 
 def get_diff(file1, file2):
-    deleted_keys = set(file1.keys()) - set(file2.keys())
-    added_keys = set(file2.keys()) - set(file1.keys())
-    common_keys = set(file1.keys()).intersection(set(file2.keys()))
-    changed_keys = {
-        key for key in common_keys if file1[key] != file2[key]
-    }
-
     diff = []
 
     for key in sorted(set(file1.keys()) | set(file2.keys())):
-        value1 = file1[key]
-        value2 = file2[key]
-        if key in deleted_keys:
-            diff.append(make_new_diff_entry(key, None, value1, state='deleted'))
-        elif key in added_keys:
-            diff.append(make_new_diff_entry(key, value2, state='added'))
-        elif key in changed_keys:
-            diff.append(make_new_diff_entry(key, value2, value1, state='changed'))
-        elif isinstance(value1, dict) and isinstance(value2, dict):
-            diff.append(make_new_diff_entry(key, value2, value1, state='nested'))
-        else:
-            diff.append(make_new_diff_entry(key, value1, state='unchanged'))
+        value1 = file1.get(key, None)
+        value2 = file2.get(key, None)
+        diff.append(make_new_diff_entry(key, value2, value1))
 
     return diff
