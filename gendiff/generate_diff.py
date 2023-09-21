@@ -18,9 +18,9 @@ def make_new_diff_entry(key, new_value, old_value):
         'old_value': old_value,
     }
 
-    if not old_value:
+    if old_value is None:
         state = 'added'
-    elif not new_value:
+    elif new_value is None:
         state = 'deleted'
     elif new_value != old_value:
         state = 'changed'
