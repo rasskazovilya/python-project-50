@@ -22,11 +22,11 @@ def make_new_diff_entry(key, new_value, old_value):
         state = 'added'
     elif new_value is None:
         state = 'deleted'
-    elif new_value != old_value:
-        state = 'changed'
     elif isinstance(new_value, dict) and isinstance(old_value, dict):
         state = 'nested'
         entry.update({'children': get_diff(old_value, new_value)})
+    elif new_value != old_value:
+        state = 'changed'
     else:
         state = 'unchanged'
     entry.update({'state': state})
