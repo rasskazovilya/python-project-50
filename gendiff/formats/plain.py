@@ -45,3 +45,5 @@ def format_value(value):
         return '[complex value]'
     elif isinstance(value, str):
         return f'\'{value}\''
+    else:
+        return value
