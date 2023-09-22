@@ -1,55 +1,55 @@
 def format_diff_stylish(diff):
-    text = format_diff(diff)
+    text = ''.join(map(format_entry, diff))
     return '{\n' + text + '}'
 
 
-def format_diff(diff, tab=1):
-    text = ''
-    for entry in diff:
-        key = entry['key']
-        old_value = entry.get('old_value')
-        new_value = entry.get('new_value')
-        children = entry.get('children')
+def format_entry(entry, tab=1):
+    key = entry.get('key')
+    old = entry.get('old_value')
+    new = entry.get('new_value')
+    children = entry.get('children')
 
-        if entry['state'] == 'added':
-            text += format_line(key, new_value, '+', tab)
-        elif entry['state'] == 'deleted':
-            text += format_line(key, old_value, '-', tab)
-        elif entry['state'] == 'changed':
-            text += format_line(key, old_value, '-', tab)
-            text += format_line(key, new_value, '+', tab)
-        elif entry['state'] == 'unchanged':
-            text += format_line(key, new_value, ' ', tab)
-        elif entry['state'] == 'nested':
-            text += format_line(key, children, ' ', tab)
-    return text
+    operations = {
+        'added': lambda _, value: format_line(key, value, '+', tab),
+        'deleted': lambda value, _: format_line(key, value, '-', tab),
+        'changed': lambda old, new: format_changed(key, old, new, tab),
+        'unchanged': lambda value, _: format_line(key, value, ' ', tab),
+        'nested': lambda children, _: format_line(key, children, ' ', tab),
+    }
+
+    if entry['state'] == 'nested':
+        return operations[entry['state']](children, None)
+    return operations[entry['state']](old, new)
+
+
+def format_changed(key, old, new, tab):
+    return (
+        format_line(key, old, '-', tab) +
+        format_line(key, new, '+', tab)
+    )
 
 
 def format_line(key, value, op, tab):
     indent = ' ' * (4 * tab - 2)
-    text = format_value(value)
-    if isinstance(value, dict):
-        # print(key, value)
-        text = f'{indent}{op} {key}: {"{"}\n'
-        text += ''.join(format_line(k, v, ' ', tab + 1) for k, v in value.items())
-        # for k, v in value.items():
-        #     text += format_line(k, v, ' ', tab + 1)
-        return text + ' ' * 4 * tab + '}\n'
-    elif isinstance(value, list):
-        text = f'{indent}{op} {key}: {"{"}\n'
-        text += format_diff(value, tab + 1)
-        return text + ' ' * 4 * tab + '}\n'
-    return f'{indent}{op} {key}: {format_value(value)}\n'
+    text = format_value(value, tab)
+    return f'{indent}{op} {key}: {text}\n'
 
 
-def format_value(value):
+def format_value(value, tab):
     if value is True:
         return 'true'
     elif value is False:
         return 'false'
     elif value is None:
         return 'null'
-    # elif isinstance(value, dict):
-    #     return ''.join(format_line(k, v, ' ', tab + 1) for k, v in value.items())
+    elif isinstance(value, dict):
+        lines = [format_line(k, v, ' ', tab + 1) for k, v in value.items()]
+        return format_multiline(lines, tab)
+    elif isinstance(value, list):
+        lines = [format_entry(v, tab + 1) for v in value]
+        return format_multiline(lines, tab)
     else:
         return value
+
+def format_multiline(lines, tab):
+    return f'{"{"}\n' + ''.join(lines) + ' ' * 4 * tab + '}'
