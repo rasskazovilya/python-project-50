@@ -51,5 +51,6 @@ def format_value(value, tab):
     else:
         return value
 
+
 def format_multiline(lines, tab):
     return f'{"{"}\n' + ''.join(lines) + ' ' * 4 * tab + '}'
