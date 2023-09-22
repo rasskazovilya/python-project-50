@@ -34,3 +34,13 @@ def test_generate_diff_nested_json():
     with open(get_fixture_path('nested_result_stylish.txt')) as result_file:
         result = result_file.read()
     assert result == diff
+
+def test_generate_diff_nested_yml():
+    diff = generate_diff(
+        get_fixture_path('nested_file1.yml'),
+        get_fixture_path('nested_file2.yaml')
+    )
+
+    with open(get_fixture_path('nested_result_stylish.txt')) as result_file:
+        result = result_file.read()
+    assert result == diff
