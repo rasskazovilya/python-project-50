@@ -18,9 +18,9 @@ def make_new_diff_entry(key, new_value, old_value):
         'old_value': old_value,
     }
 
-    if old_value is None:
+    if old_value == '_empty':
         state = 'added'
-    elif new_value is None:
+    elif new_value == '_empty':
         state = 'deleted'
     elif isinstance(new_value, dict) and isinstance(old_value, dict):
         state = 'nested'
@@ -38,8 +38,8 @@ def get_diff(file1, file2):
     diff = []
 
     for key in sorted(set(file1.keys()) | set(file2.keys())):
-        value1 = file1.get(key, None)
-        value2 = file2.get(key, None)
+        value1 = file1.get(key, '_empty')
+        value2 = file2.get(key, '_empty')
         diff.append(make_new_diff_entry(key, value2, value1))
 
     return diff
