@@ -180,5 +180,11 @@
         },
         "old_value": "_empty",
         "state": "added"
+    },
+    {
+        "key": "universe",
+        "new_value": 42,
+        "old_value": "_empty",
+        "state": "added"
     }
 ]
