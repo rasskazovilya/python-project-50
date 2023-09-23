@@ -23,10 +23,7 @@ def format_entry(entry, tab=1):
 
 
 def format_changed(key, old, new, tab):
-    return (
-        format_line(key, old, '-', tab) +
-        format_line(key, new, '+', tab)
-    )
+    return format_line(key, old, '-', tab) + format_line(key, new, '+', tab)
 
 
 def format_line(key, value, op, tab):
