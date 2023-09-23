@@ -11,6 +11,7 @@ def format_entry(entry, parent_key):
     new_value = format_value(entry.get('new_value'))
     state = entry['state']
 
+    result = ''
     if state == 'added':
         result = f"Property '{key}' was added with value: {new_value}"
     elif state == 'deleted':
