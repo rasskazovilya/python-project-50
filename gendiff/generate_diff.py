@@ -17,7 +17,7 @@ def make_new_diff_entry(key, new_value, old_value):
         'new_value': new_value,
         'old_value': old_value,
     }
-
+    state = 'unchanged'
     if old_value == '_empty':
         state = 'added'
     elif new_value == '_empty':
@@ -27,8 +27,6 @@ def make_new_diff_entry(key, new_value, old_value):
         entry.update({'children': get_diff(old_value, new_value)})
     elif new_value != old_value:
         state = 'changed'
-    else:
-        state = 'unchanged'
     entry.update({'state': state})
 
     return entry
