@@ -8,6 +8,7 @@ def format_entry(entry, tab=1):
     old = entry.get('old_value')
     new = entry.get('new_value')
     children = entry.get('children')
+    state = entry['state']
 
     operations = {
         'added': lambda _, value: format_line(key, value, '+', tab),
@@ -17,9 +18,9 @@ def format_entry(entry, tab=1):
         'nested': lambda children, _: format_line(key, children, ' ', tab),
     }
 
-    if entry['state'] == 'nested':
-        return operations[entry['state']](children, None)
-    return operations[entry['state']](old, new)
+    if state == 'nested':
+        return operations[state](children, None)
+    return operations[state](old, new)
 
 
 def format_changed(key, old, new, tab):
@@ -33,20 +34,18 @@ def format_line(key, value, op, tab):
 
 
 def format_value(value, tab):
-    if value is True:
-        return 'true'
-    elif value is False:
-        return 'false'
+    result = value
+    if isinstance(value, bool):
+        result = str(value).lower()
     elif value is None:
-        return 'null'
+        result = 'null'
     elif isinstance(value, dict):
         lines = [format_line(k, v, ' ', tab + 1) for k, v in value.items()]
-        return format_multiline(lines, tab)
+        result = format_multiline(lines, tab)
     elif isinstance(value, list):
         lines = [format_entry(v, tab + 1) for v in value]
-        return format_multiline(lines, tab)
-    else:
-        return value
+        result = format_multiline(lines, tab)
+    return result
 
 
 def format_multiline(lines, tab):
