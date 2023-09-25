@@ -5,9 +5,7 @@ from gendiff.formats.choose_format import format_diff
 def generate_diff(path1, path2, format='stylish'):
     file1 = parsing.get_file_contents(path1)
     file2 = parsing.get_file_contents(path2)
-
     diff = get_diff(file1, file2)
-
     return format_diff(diff, format)
 
 
@@ -28,16 +26,13 @@ def make_new_diff_entry(key, new_value, old_value):
     elif new_value != old_value:
         state = 'changed'
     entry.update({'state': state})
-
     return entry
 
 
 def get_diff(file1, file2):
     diff = []
-
     for key in sorted(set(file1.keys()) | set(file2.keys())):
         value1 = file1.get(key, '_empty')
         value2 = file2.get(key, '_empty')
         diff.append(make_new_diff_entry(key, value2, value1))
-
     return diff
