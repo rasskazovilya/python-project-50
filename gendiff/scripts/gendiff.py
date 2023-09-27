@@ -3,7 +3,7 @@ import argparse
 from gendiff import generate_diff
 
 
-def main():
+def get_cli_args():
     parser = argparse.ArgumentParser(
         prog='gendiff',
         description='Compares two configuration files and shows a difference.',
@@ -18,7 +18,11 @@ def main():
         choices=['stylish', 'plain', 'json']
     )
 
-    args = parser.parse_args()
+    return parser.parse_args()
+
+
+def main():
+    args = get_cli_args()
 
     diff = generate_diff(args.first_file, args.second_file, args.format)
     print(diff)
