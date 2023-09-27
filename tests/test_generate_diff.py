@@ -22,7 +22,11 @@ def get_fixture_path(filename):
     ],
 )
 def test_gendiff(file1, file2, format):
-    diff = generate_diff(get_fixture_path(file1), get_fixture_path(file2), format)
+    diff = generate_diff(
+        get_fixture_path(file1),
+        get_fixture_path(file2),
+        format
+    )
 
     result_path = f"result_{format}.txt"
     if "nested" in file1:

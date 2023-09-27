@@ -12,7 +12,7 @@ def test_parsing():
     parsed_data2 = parsing.parse('{"a": 1}', format='yaml')
     data, format = read_file.get_contents_suffix(get_fixture_path('file1.json'))
     parsed_data3 = parsing.parse(data, format)
-    
+
     assert parsed_data1 == {"a": 1}
     assert parsed_data2 == {"a": 1}
     assert parsed_data3 == {
