@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 def get_fixture_path(filename):
-    fixtures_folder = Path('gendiff') / 'tests' / 'fixtures'
+    fixtures_folder = Path('tests') / 'fixtures'
     return fixtures_folder / filename
 
 
